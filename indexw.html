@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Before Today101 — Weather Dashboard</title>
+<meta name="description" content="Before Today101 — สรุปสภาพอากาศภาคตะวันตกของประเทศไทย">
+<style>
+:root{
+  --bg:#fffaf7; --card:#ffffff; --text:#3d405b; --muted:#777b91;
+  --primary:#8ecae6; --secondary:#ffb4a2; --accent:#b8e0d2;
+  --warning:#ffd6a5; --danger:#ffadad; --border:#eee6e2;
+  --shadow:0 12px 35px rgba(61,64,91,.08);
+}
+[data-theme="dark"]{
+  --bg:#171923; --card:#222532; --text:#f4f1ed; --muted:#b9bccb;
+  --primary:#77b7d3; --secondary:#d99689; --accent:#91c6b2;
+  --warning:#d5ad78; --danger:#d88888; --border:#343746;
+  --shadow:0 12px 35px rgba(0,0,0,.22);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;line-height:1.6}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.container{max-width:1180px;margin:auto;padding:20px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0 22px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,var(--primary),var(--secondary));display:grid;place-items:center;font-weight:900;color:#fff}
+h1,h2,h3{margin:.2em 0}
+h1{font-size:clamp(1.55rem,4vw,2.3rem)}
+.sub{color:var(--muted);font-size:.92rem}
+.controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.btn{border:1px solid var(--border);background:var(--card);color:var(--text);padding:9px 13px;border-radius:12px;box-shadow:var(--shadow)}
+.btn.primary{background:var(--text);color:var(--bg)}
+.hero{background:linear-gradient(135deg,#dff3fb,#fff0ec 55%,#e7f7f0);border-radius:28px;padding:28px;box-shadow:var(--shadow);margin-bottom:20px}
+[data-theme="dark"] .hero{background:linear-gradient(135deg,#263a46,#423039 55%,#273e37)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.badge{padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.65);font-size:.85rem}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{grid-column:span 4;background:var(--card);border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:var(--shadow)}
+.card.wide{grid-column:span 8}.card.full{grid-column:1/-1}
+@media(max-width:850px){.card,.card.wide{grid-column:1/-1}header{align-items:flex-start;flex-direction:column}.controls{justify-content:flex-start}}
+.kpi{font-size:2rem;font-weight:800}.muted{color:var(--muted)}
+.alert{border-left:5px solid var(--danger);background:color-mix(in srgb,var(--danger) 18%,var(--card));padding:16px;border-radius:14px}
+.province{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--border)}
+.province:last-child{border-bottom:0}
+.risk{font-weight:700}.risk.high{color:#c75d5d}.risk.medium{color:#b77a32}
+.forecast{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.day{padding:14px;border-radius:16px;background:color-mix(in srgb,var(--primary) 16%,var(--card));text-align:center}
+.temp{font-weight:800;font-size:1.3rem}
+.source{font-size:.82rem;color:var(--muted);margin-top:10px}
+a{color:inherit}
+.editor{display:none;margin:18px 0;padding:20px;border:2px dashed var(--primary);border-radius:20px;background:var(--card)}
+.editor.open{display:block}
+textarea{width:100%;min-height:120px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:14px;padding:12px}
+.edit-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+footer{padding:30px 0;color:var(--muted);font-size:.85rem;text-align:center}
+.en{display:none}
+body[data-lang="en"] .th{display:none} body[data-lang="en"] .en{display:inline}
+body[data-lang="en"] .thblock{display:none} body[data-lang="en"] .enblock{display:block}
+.thblock{display:block}.enblock{display:none}
+.image-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.image-wrap figure{margin:0;background:var(--bg);border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+.image-wrap img{width:100%;height:210px;object-fit:cover;display:block}
+figcaption{padding:9px;font-size:.8rem;color:var(--muted)}
+@media(max-width:650px){.forecast,.image-wrap{grid-template-columns:1fr 1fr}.image-wrap figure:first-child{grid-column:1/-1}}
+</style>
+</head>
+<body data-lang="th">
+<div class="container">
+<header>
+  <div class="brand">
+    <div class="logo">BT</div>
+    <div>
+      <h1>Before Today101</h1>
+      <div class="sub th">Weather • Data • Today</div>
+      <div class="sub en">Weather • Data • Today</div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn" id="langBtn">EN / ไทย</button>
+    <button class="btn" id="themeBtn">☾ <span class="th">มืด</span><span class="en">Dark</span></button>
+    <button class="btn primary" id="editBtn">✎ <span class="th">Copy-Edit</span><span class="en">Copy-Edit</span></button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="sub th">อัปเดตสำหรับวันนี้ • 29 กันยายน 2569</div>
+  <div class="sub en">Today's update • 29 September 2026</div>
+  <h2 class="thblock">พยากรณ์อากาศภาคตะวันตก ประเทศไทย</h2>
+  <h2 class="enblock">Western Thailand Weather Forecast</h2>
+  <p class="thblock">ภาพรวมวันนี้: มีโอกาสเกิดฝนฟ้าคะนองหลายพื้นที่ และบางจุดอาจมีฝนตกหนัก ควรเฝ้าระวังน้ำท่วมฉับพลัน น้ำป่าไหลหลาก และฟ้าผ่า โดยเฉพาะพื้นที่ภูเขา เชิงเขา และพื้นที่ลุ่ม</p>
+  <p class="enblock">Today: Thunderstorms are possible across several areas, with isolated heavy rain. Watch for flash floods, runoff and lightning, especially near mountains, foothills and low-lying areas.</p>
+  <div class="badges">
+    <span class="badge">🌧️ <span class="th">ฝนฟ้าคะนอง</span><span class="en">Thunderstorms</span></span>
+    <span class="badge">⚠️ <span class="th">เฝ้าระวังฝนหนัก</span><span class="en">Heavy-rain watch</span></span>
+    <span class="badge">💧 <span class="th">เสี่ยงน้ำท่วมฉับพลัน</span><span class="en">Flash-flood risk</span></span>
+  </div>
+</section>
+
+<div id="editor" class="editor">
+  <h3>Copy-Edit</h3>
+  <p class="muted th">แก้ข้อความด้านล่าง แล้วกดบันทึกเพื่อแสดงผลบนหน้าเว็บ (บันทึกในเครื่องนี้ด้วย localStorage)</p>
+  <p class="muted en">Edit the text below and save. Changes are stored locally in this browser.</p>
+  <textarea id="editText"></textarea>
+  <div class="edit-row">
+    <button class="btn primary" id="saveEdit">Save</button>
+    <button class="btn" id="resetEdit">Reset</button>
+  </div>
+</div>
+
+<section class="grid">
+  <article class="card">
+    <div class="sub">TODAY</div>
+    <div class="kpi">31°C</div>
+    <div class="muted th">กาญจนบุรี • อุณหภูมิสูงสุดโดยประมาณ</div>
+    <div class="muted en">Kanchanaburi • approximate high</div>
+  </article>
+  <article class="card">
+    <div class="sub">RAIN</div>
+    <div class="kpi">⛈️</div>
+    <div class="muted th">มีโอกาสเกิดฝนฟ้าคะนอง</div>
+    <div class="muted en">Thunderstorms possible</div>
+  </article>
+  <article class="card">
+    <div class="sub">ALERT</div>
+    <div class="kpi">⚠️</div>
+    <div class="muted th">ระวังฝนหนักและน้ำสะสม</div>
+    <div class="muted en">Watch heavy rain and accumulation</div>
+  </article>
+
+  <article class="card wide">
+    <h3 class="th">พื้นที่ภาคตะวันตกที่ควรติดตาม</h3>
+    <h3 class="en">Western-area watchlist</h3>
+    <div class="province"><span>กาญจนบุรี</span><span class="risk high">สูง / High</span></div>
+    <div class="province"><span>ราชบุรี</span><span class="risk high">สูง / High</span></div>
+    <div class="province"><span>เพชรบุรี</span><span class="risk medium">ปานกลาง / Medium</span></div>
+    <div class="province"><span>ประจวบคีรีขันธ์</span><span class="risk medium">ปานกลาง / Medium</span></div>
+    <div class="source th">ระดับความเสี่ยงเป็นการสรุปเพื่อการนำเสนอ ไม่ใช่ประกาศเตือนภัยอย่างเป็นทางการ</div>
+    <div class="source en">Risk labels are presentation summaries, not official warnings.</div>
+  </article>
+
+  <article class="card">
+    <h3 class="th">ข้อควรระวัง</h3><h3 class="en">Safety</h3>
+    <div class="alert th">หากฝนตกหนักต่อเนื่อง ให้หลีกเลี่ยงทางน้ำไหลผ่าน พื้นที่เชิงเขา และพื้นที่ลุ่มต่ำ</div>
+    <div class="alert en">During prolonged heavy rain, avoid waterways, foothills and low-lying areas.</div>
+  </article>
+
+  <article class="card full">
+    <h3 class="th">แนวโน้ม 4 วัน</h3><h3 class="en">4-day outlook</h3>
+    <div class="forecast">
+      <div class="day"><b>29 ก.ย.</b><div>⛈️</div><div class="temp">31°</div><small>24°</small></div>
+      <div class="day"><b>30 ก.ย.</b><div>⛈️</div><div class="temp">34°</div><small>25°</small></div>
+      <div class="day"><b>1 ต.ค.</b><div>⛈️</div><div class="temp">35°</div><small>25°</small></div>
+      <div class="day"><b>2 ต.ค.</b><div>🌦️</div><div class="temp">35°</div><small>24°</small></div>
+    </div>
+  </article>
+
+  <article class="card full">
+    <h3 class="th">ภาพและแหล่งข้อมูล</h3><h3 class="en">Images & sources</h3>
+    <div class="image-wrap">
+      <figure>
+        <img src="https://satda.tmd.go.th/tmd_satellite.php?datetime=2026082908" alt="TMD satellite and rainfall analysis" onerror="this.style.display='none'">
+        <figcaption>TMD satellite / rainfall analysis</figcaption>
+      </figure>
+      <figure>
+        <img src="https://www.tmd.go.th/" alt="Thailand Meteorological Department" onerror="this.style.display='none'">
+        <figcaption>TMD official weather information</figcaption>
+      </figure>
+    </div>
+    <div class="source">
+      Sources:
+      <a href="https://www.tmd.go.th/" target="_blank" rel="noopener">Thai Meteorological Department</a> •
+      <a href="https://satda.tmd.go.th/" target="_blank" rel="noopener">TMD Satellite</a>
+    </div>
+  </article>
+</section>
+
+<footer>
+  <div class="th">Before Today101 • เว็บไซต์ตัวอย่างสำหรับสรุปข้อมูลอากาศ • ตรวจสอบประกาศทางการก่อนเดินทางหรือทำกิจกรรมกลางแจ้ง</div>
+  <div class="en">Before Today101 • Weather information interface • Check official warnings before travel or outdoor activities.</div>
+</footer>
+</div>
+
+<script>
+const body=document.body, editor=document.getElementById('editor'), editText=document.getElementById('editText');
+const defaultText=`ภาพรวมวันนี้: มีโอกาสเกิดฝนฟ้าคะนองหลายพื้นที่ และบางจุดอาจมีฝนตกหนัก ควรเฝ้าระวังน้ำท่วมฉับพลัน น้ำป่าไหลหลาก และฟ้าผ่า โดยเฉพาะพื้นที่ภูเขา เชิงเขา และพื้นที่ลุ่ม`;
+const saved=localStorage.getItem('bt101_edit');
+if(saved) document.querySelector('.hero p.thblock').textContent=saved;
+editText.value=saved||defaultText;
+
+document.getElementById('themeBtn').onclick=()=>{
+  const dark=body.dataset.theme==='dark';
+  body.dataset.theme=dark?'':'dark';
+  localStorage.setItem('bt101_theme',body.dataset.theme);
+};
+if(localStorage.getItem('bt101_theme')==='dark') body.dataset.theme='dark';
+
+document.getElementById('langBtn').onclick=()=>{
+  body.dataset.lang=body.dataset.lang==='en'?'th':'en';
+  localStorage.setItem('bt101_lang',body.dataset.lang);
+};
+if(localStorage.getItem('bt101_lang')) body.dataset.lang=localStorage.getItem('bt101_lang');
+
+document.getElementById('editBtn').onclick=()=>editor.classList.toggle('open');
+document.getElementById('saveEdit').onclick=()=>{
+  const value=editText.value.trim();
+  if(value){document.querySelector('.hero p.thblock').textContent=value;localStorage.setItem('bt101_edit',value);}
+};
+document.getElementById('resetEdit').onclick=()=>{
+  editText.value=defaultText;
+  document.querySelector('.hero p.thblock').textContent=defaultText;
+  localStorage.removeItem('bt101_edit');
+};
+</script>
+</body>
+</html>
