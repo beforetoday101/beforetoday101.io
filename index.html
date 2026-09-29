@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Before Today101 — Thailand Weather</title>
+<meta name="description" content="Before Today101 — สรุปพยากรณ์อากาศประเทศไทยและภาคตะวันตก">
+<style>
+:root{--bg:#fffaf7;--card:#fff;--text:#3d405b;--muted:#777b91;--p:#8ecae6;--s:#ffb4a2;--a:#b8e0d2;--w:#ffd6a5;--d:#ffadad;--border:#eee6e2;--shadow:0 12px 35px rgba(61,64,91,.08)}
+[data-theme=dark]{--bg:#171923;--card:#222532;--text:#f4f1ed;--muted:#b9bccb;--p:#77b7d3;--s:#d99689;--a:#91c6b2;--w:#d5ad78;--d:#d88888;--border:#343746;--shadow:0 12px 35px rgba(0,0,0,.25)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;line-height:1.6}
+button,input,textarea{font:inherit}button{cursor:pointer}.container{max-width:1220px;margin:auto;padding:18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0 20px}.brand{display:flex;gap:12px;align-items:center}.logo{width:50px;height:50px;border-radius:17px;background:linear-gradient(135deg,var(--p),var(--s));display:grid;place-items:center;color:white;font-weight:900}.sub,.source{color:var(--muted);font-size:.88rem}.controls{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--border);background:var(--card);color:var(--text);padding:9px 13px;border-radius:12px}.btn.primary{background:var(--text);color:var(--bg)}
+.hero{background:linear-gradient(135deg,#dff3fb,#fff0ec 55%,#e7f7f0);border-radius:28px;padding:28px;box-shadow:var(--shadow);margin-bottom:18px}[data-theme=dark] .hero{background:linear-gradient(135deg,#263a46,#423039 55%,#273e37)}
+h1,h2,h3{margin:.2em 0}h1{font-size:clamp(1.5rem,4vw,2.2rem)}h2{font-size:clamp(1.35rem,3vw,1.9rem)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.badge{padding:7px 11px;border-radius:999px;background:#ffffffa8;font-size:.84rem}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{grid-column:span 4;background:var(--card);border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:var(--shadow)}.wide{grid-column:span 8}.full{grid-column:1/-1}
+.kpi{font-size:2rem;font-weight:850}.muted{color:var(--muted)}
+.alert{border-left:5px solid var(--d);background:color-mix(in srgb,var(--d) 18%,var(--card));padding:14px;border-radius:14px}
+.region-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.region{padding:15px;border-radius:17px;background:color-mix(in srgb,var(--p) 14%,var(--card));border:1px solid var(--border)}.region b{display:block;margin-bottom:5px}.region .temp{font-size:1.25rem;font-weight:800}
+.forecast{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.day{padding:13px;border-radius:16px;background:color-mix(in srgb,var(--a) 17%,var(--card));text-align:center;border:1px solid var(--border)}.icon{font-size:1.55rem}.temp{font-weight:800}
+.media-feed{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.media{border:1px solid var(--border);border-radius:18px;overflow:hidden;background:var(--bg)}.media img{width:100%;height:260px;object-fit:cover;display:block;background:#ddd}.media-body{padding:13px}.media a{color:var(--text);font-weight:750;text-decoration:none}
+.editor{display:none;margin:18px 0;padding:20px;border:2px dashed var(--p);border-radius:20px;background:var(--card)}.editor.open{display:block}.editor textarea{width:100%;min-height:150px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:14px;padding:12px}.edit-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+#loginModal{display:none;position:fixed;inset:0;background:#0008;z-index:50;place-items:center;padding:20px}#loginModal.open{display:grid}.modal{width:min(420px,100%);background:var(--card);border-radius:22px;padding:24px;box-shadow:0 25px 80px #0005}.modal input{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);margin:8px 0 12px}.err{color:#c75d5d;min-height:24px}
+footer{text-align:center;color:var(--muted);padding:30px 0}.en,.enblock{display:none}body[data-lang=en] .th,body[data-lang=en] .thblock{display:none}body[data-lang=en] .en,body[data-lang=en] .enblock{display:block}
+@media(max-width:900px){.card,.wide{grid-column:1/-1}.region-grid{grid-template-columns:repeat(3,1fr)}.forecast{grid-template-columns:repeat(4,1fr)}}@media(max-width:600px){header{align-items:flex-start;flex-direction:column}.region-grid,.forecast,.media-feed{grid-template-columns:1fr 1fr}.controls{justify-content:flex-start}}
+</style>
+</head>
+<body data-lang="th">
+<div class="container">
+<header>
+ <div class="brand"><div class="logo">BT</div><div><h1>Before Today101</h1><div class="sub">Weather • Data • Today</div></div></div>
+ <div class="controls">
+  <button class="btn" id="langBtn">EN / ไทย</button>
+  <button class="btn" id="themeBtn">☾ <span class="th">มืด</span><span class="en">Dark</span></button>
+  <button class="btn" id="adminBtn">🔐 Admin</button>
+ </div>
+</header>
+
+<section class="hero">
+ <div class="sub">29 September 2026 • Thailand</div>
+ <h2 class="thblock">พยากรณ์อากาศประเทศไทย — สรุปรวมวันนี้</h2><h2 class="enblock">Thailand Weather — National Summary</h2>
+ <p id="summary" class="thblock">ทั่วประเทศยังมีโอกาสเกิดฝนฟ้าคะนอง โดยพื้นที่ภาคตะวันตกและภาคกลางควรเฝ้าระวังฝนหนักและฝนสะสมเป็นพิเศษ</p>
+ <p class="enblock">Thunderstorms remain possible nationwide. Western and Central Thailand should pay particular attention to heavy and accumulated rainfall.</p>
+ <div class="badges"><span class="badge">🌧️ <span class="th">ฝนฟ้าคะนอง</span><span class="en">Thunderstorms</span></span><span class="badge">⚠️ <span class="th">ฝนหนักบางพื้นที่</span><span class="en">Isolated heavy rain</span></span><span class="badge">🌊 <span class="th">เฝ้าระวังน้ำท่วมฉับพลัน</span><span class="en">Flash-flood watch</span></span></div>
+</section>
+
+<div id="editor" class="editor">
+ <h3>Copy-Edit / Admin</h3>
+ <p class="muted">แก้ไขข้อความสรุปสำหรับหน้าเว็บ ข้อมูลจะถูกเก็บไว้ใน browser เครื่องนี้</p>
+ <textarea id="editText"></textarea>
+ <div class="edit-row"><button class="btn primary" id="saveEdit">Save</button><button class="btn" id="resetEdit">Reset</button><button class="btn" id="logout">Logout</button></div>
+</div>
+
+<section class="grid">
+ <article class="card"><div class="sub">WESTERN THAILAND</div><div class="kpi">⛈️</div><div class="muted th">กาญจนบุรี ราชบุรี เพชรบุรี ประจวบฯ มีฝนฟ้าคะนองและควรระวังฝนหนัก</div><div class="muted en">Kanchanaburi, Ratchaburi, Phetchaburi and Prachuap may see thunderstorms and isolated heavy rain.</div></article>
+ <article class="card"><div class="sub">NATIONAL</div><div class="kpi">29–35°C</div><div class="muted th">ช่วงอุณหภูมิโดยสรุปของหลายพื้นที่</div><div class="muted en">Indicative temperature range across many areas.</div></article>
+ <article class="card"><div class="sub">SEA</div><div class="kpi">🌊</div><div class="muted th">คลื่นอาจสูงขึ้นในบริเวณฝนฟ้าคะนอง</div><div class="muted en">Waves can become higher near thunderstorms.</div></article>
+
+ <article class="card full"><h3 class="th">สรุปพยากรณ์อากาศประเทศไทยแยกตามภูมิภาค</h3><h3 class="en">Thailand weather by region</h3>
+  <div class="region-grid">
+   <div class="region"><b>เหนือ / North</b><span>🌦️ ฝนฟ้าคะนอง</span><br><span class="temp">28–34°C</span></div>
+   <div class="region"><b>อีสาน / Northeast</b><span>🌦️ ฝนบางพื้นที่</span><br><span class="temp">28–32°C</span></div>
+   <div class="region"><b>กลาง / Central</b><span>⛈️ ฝนค่อนข้างมาก</span><br><span class="temp">27–34°C</span></div>
+   <div class="region"><b>ตะวันออก / East</b><span>⛈️ ฝนและฝนหนักบางแห่ง</span><br><span class="temp">26–33°C</span></div>
+   <div class="region"><b>ใต้ ตะวันออก / S. East</b><span>🌦️ ฝนฟ้าคะนอง</span><br><span class="temp">29–34°C</span></div>
+   <div class="region"><b>ใต้ ตะวันตก / S. West</b><span>🌧️ ฝนค่อนข้างมาก</span><br><span class="temp">29–34°C</span></div>
+  </div>
+  <div class="source" style="margin-top:12px">อ้างอิงกรอบข้อมูลกรมอุตุนิยมวิทยา: low-pressure cell + southwest monsoon และฝนหนักบางพื้นที่ในภาคตะวันตก/ภาคกลาง/ภาคตะวันออก <a href="https://www5.tmd.go.th/en/forecast/daily/280920261200" target="_blank" rel="noopener">TMD Daily Forecast</a></div>
+ </article>
+
+ <article class="card full"><h3 class="th">แนวโน้ม 7 วัน</h3><h3 class="en">7-day outlook</h3>
+  <div class="forecast">
+   <div class="day"><b>29 ก.ย.</b><div class="icon">⛈️</div><div class="temp">30° / 25°</div><small>ฝน 60%</small></div>
+   <div class="day"><b>30 ก.ย.</b><div class="icon">⛈️</div><div class="temp">31° / 25°</div><small>ฝน 60%</small></div>
+   <div class="day"><b>1 ต.ค.</b><div class="icon">🌦️</div><div class="temp">30° / 25°</div><small>ฝน 40%</small></div>
+   <div class="day"><b>2 ต.ค.</b><div class="icon">🌦️</div><div class="temp">30° / 24°</div><small>ฝน 60%</small></div>
+   <div class="day"><b>3 ต.ค.</b><div class="icon">🌦️</div><div class="temp">30° / 24°</div><small>ฝน 60%</small></div>
+   <div class="day"><b>4 ต.ค.</b><div class="icon">🌦️</div><div class="temp">29° / 24°</div><small>ฝน 60%</small></div>
+   <div class="day"><b>5 ต.ค.</b><div class="icon">🌦️</div><div class="temp">—</div><small>ติดตาม TMD</small></div>
+  </div>
+  <div class="source">ตัวเลขแนวโน้มอิงข้อมูล 7-day forecast ของ TMD ที่เผยแพร่ 28 ก.ย. 2569; ควรตรวจสอบหน้า TMD ล่าสุดก่อนใช้งานจริง</div>
+ </article>
+
+ <article class="card full"><h3 class="th">ภาพและข้อมูลต่อเนื่องจากแหล่งทางการ</h3><h3 class="en">Continuous official images & data</h3>
+  <div class="media-feed">
+   <div class="media"><img src="https://www5.tmd.go.th/en/weather/weatherthailand" alt="TMD Thailand weather page"><div class="media-body"><a href="https://www5.tmd.go.th/en/weather/weatherthailand" target="_blank" rel="noopener">🌤️ TMD Thailand Weather</a><div class="source">พยากรณ์ประเทศไทย • 7 วัน • สรุปสถานการณ์</div></div></div>
+   <div class="media"><img src="https://www.tmd.go.th/weather/weatherthailand" alt="TMD weather Thailand"><div class="media-body"><a href="https://www.tmd.go.th/weather/weatherthailand" target="_blank" rel="noopener">🌦️ กรมอุตุนิยมวิทยา — Weather Thailand</a><div class="source">ข้อมูลสภาพอากาศจากหน่วยงานต้นทาง</div></div></div>
+   <div class="media"><img src="https://satda.tmd.go.th/" alt="TMD satellite"><div class="media-body"><a href="https://satda.tmd.go.th/" target="_blank" rel="noopener">🛰️ TMD Satellite</a><div class="source">ภาพดาวเทียม/การติดตามกลุ่มฝนจากแหล่งที่กำหนด</div></div></div>
+   <div class="media"><img src="https://www.tmd.go.th/weather/weather_radar" alt="TMD weather radar"><div class="media-body"><a href="https://www.tmd.go.th/weather/weather_radar" target="_blank" rel="noopener">📡 TMD Weather Radar</a><div class="source">ใช้ตรวจสอบกลุ่มฝนและแนวโน้มล่าสุด</div></div></div>
+  </div>
+  <div class="source" style="margin-top:12px">หมายเหตุ: เว็บไซต์ภายนอกบางแห่งอาจไม่อนุญาตให้ฝังภาพในหน้าเว็บโดยตรง จึงมีลิงก์ต้นทางกำกับไว้เสมอ</div>
+ </article>
+
+ <article class="card wide"><h3 class="th">การเตือนภัย</h3><h3 class="en">Safety watch</h3><div class="alert"><b>⚠️ <span class="th">ฝนสะสม / น้ำท่วมฉับพลัน</span><span class="en">Accumulated rain / flash floods</span></b><br><span class="th">พื้นที่เชิงเขา ทางน้ำ และที่ลุ่มควรติดตามประกาศทางการ หากมีฝนตกหนักต่อเนื่อง</span><span class="en">Monitor official warnings near foothills, waterways and low-lying areas during prolonged heavy rain.</span></div></article>
+ <article class="card"><h3 class="th">แหล่งอ้างอิง</h3><h3 class="en">Sources</h3><p><a href="https://www.tmd.go.th/" target="_blank" rel="noopener">กรมอุตุนิยมวิทยา (TMD)</a></p><p><a href="https://www5.tmd.go.th/en/weather/weatherthailand" target="_blank" rel="noopener">TMD Thailand Weather</a></p></article>
+</section>
+
+<footer><div class="th">Before Today101 • ข้อมูลเพื่อการติดตามสภาพอากาศ ไม่ใช่ประกาศเตือนภัยแทนหน่วยงานรัฐ</div><div class="en">Before Today101 • Weather information interface, not a replacement for official warnings.</div></footer>
+</div>
+
+<div id="loginModal"><div class="modal">
+ <h3>🔐 Admin Login</h3><p class="muted">เข้าสู่โหมด Copy-Edit</p>
+ <input id="password" type="password" placeholder="Admin password" autocomplete="current-password">
+ <div class="err" id="loginErr"></div>
+ <div class="edit-row"><button class="btn primary" id="login">Login</button><button class="btn" id="closeLogin">Cancel</button></div>
+</div></div>
+
+<script>
+const ADMIN_PASSWORD="@Unity!1999!";
+const body=document.body, modal=document.getElementById('loginModal'), editor=document.getElementById('editor');
+const summary=document.getElementById('summary'), editText=document.getElementById('editText');
+const defaultText=summary.textContent;
+document.getElementById('themeBtn').onclick=()=>{body.dataset.theme=body.dataset.theme==='dark'?'':'dark';localStorage.setItem('bt101_theme',body.dataset.theme)};
+document.getElementById('langBtn').onclick=()=>{body.dataset.lang=body.dataset.lang==='en'?'th':'en';localStorage.setItem('bt101_lang',body.dataset.lang)};
+if(localStorage.getItem('bt101_theme')==='dark')body.dataset.theme='dark';
+if(localStorage.getItem('bt101_lang'))body.dataset.lang=localStorage.getItem('bt101_lang');
+
+const saved=localStorage.getItem('bt101_summary'); if(saved)summary.textContent=saved;
+document.getElementById('adminBtn').onclick=()=>{modal.classList.add('open');document.getElementById('password').focus()};
+document.getElementById('closeLogin').onclick=()=>modal.classList.remove('open');
+document.getElementById('login').onclick=()=>{
+ const pass=document.getElementById('password').value;
+ if(pass===ADMIN_PASSWORD){modal.classList.remove('open');editor.classList.add('open');editText.value=summary.textContent;localStorage.setItem('bt101_admin','1')}
+ else document.getElementById('loginErr').textContent='รหัสผ่านไม่ถูกต้อง / Incorrect password';
+};
+document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('login').click()});
+document.getElementById('saveEdit').onclick=()=>{const v=editText.value.trim();if(v){summary.textContent=v;localStorage.setItem('bt101_summary',v)}};
+document.getElementById('resetEdit').onclick=()=>{summary.textContent=defaultText;editText.value=defaultText;localStorage.removeItem('bt101_summary')};
+document.getElementById('logout').onclick=()=>{editor.classList.remove('open');localStorage.removeItem('bt101_admin')};
+</script>
+</body>
+</html>
